@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BizBuddy AI: your AI marketing assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f7f6;--card:#fff;--tx:#10201d;--mu:#5b6b67;--bd:#dbe4e1;--ac:#0e7c6b;--bt:#fff;--sun:#f2b134;color-scheme:light}
+@media(prefers-color-scheme:dark){:root{--bg:#0b1513;--card:#122320;--tx:#eaf3f1;--mu:#93a7a2;--bd:#233834;--ac:#3fd0b6;--bt:#06201b;color-scheme:dark}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+h1,h2,h3,.logo{font-family:'Bricolage Grotesque',system-ui,sans-serif;letter-spacing:-.02em;line-height:1.1;margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--bd);z-index:5}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-size:20px;font-weight:700}.logo i{color:var(--ac);font-style:normal}
+button,input,select,textarea{font:inherit;color:inherit}
+.btn{background:var(--ac);color:var(--bt);border:0;border-radius:10px;padding:10px 18px;font-weight:600;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--tx);border:1px solid var(--bd)}.btn:disabled{opacity:.5;cursor:wait}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.hero{display:grid;gap:36px;grid-template-columns:1.1fr 1fr;padding:64px 0;align-items:center}
+.hero h1{font-size:clamp(34px,5vw,56px)}.hero p{color:var(--mu);font-size:18px;max-width:46ch}
+.chat{background:var(--card);border:1px solid var(--bd);border-radius:18px;padding:18px;display:grid;gap:10px}
+.msg{max-width:88%;padding:10px 14px;border-radius:14px;font-size:15px}
+.in{background:var(--bg);border:1px solid var(--bd)}.out{background:var(--ac);color:var(--bt);margin-left:auto}
+.cap{font-size:13px;color:var(--mu)}
+section{padding:48px 0}h2{font-size:30px;margin-bottom:20px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr))}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:20px}
+.card h3{font-size:18px;margin-bottom:6px}.card p{margin:0;color:var(--mu)}
+.price{font-size:34px;font-family:'Bricolage Grotesque',sans-serif;font-weight:700}.card.feat{border:2px solid var(--ac)}
+details{border-bottom:1px solid var(--bd);padding:14px 0}summary{cursor:pointer;font-weight:600}details p{color:var(--mu)}
+dialog{border:1px solid var(--bd);border-radius:16px;background:var(--card);color:var(--tx);width:min(380px,92vw);padding:24px}
+dialog::backdrop{background:#0008}label{display:block;font-size:14px;font-weight:600;margin:12px 0 4px}
+input,select,textarea{width:100%;background:var(--bg);border:1px solid var(--bd);border-radius:10px;padding:10px}
+textarea{min-height:90px;resize:vertical}.err{color:#d6452f;font-size:14px;min-height:20px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.tab{border:1px solid var(--bd);background:var(--card);border-radius:999px;padding:7px 14px;cursor:pointer}
+.tab[aria-pressed=true]{background:var(--ac);color:var(--bt);border-color:var(--ac)}
+.app{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding-bottom:60px}
+.meter{height:6px;background:var(--bd);border-radius:9px;overflow:hidden;margin-top:6px}.meter b{display:block;height:100%;background:var(--ac);transition:width .4s}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.empty{color:var(--mu);text-align:center;padding:36px 10px}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px}@keyframes s{to{rotate:1turn}}
+.hide{display:none!important}
+@media(max-width:760px){.hero,.app{grid-template-columns:1fr}.hero{padding:36px 0}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="logo">Biz<i>Buddy</i></div><div class="row" style="margin:0"><span id="who" class="cap hide"></span><button class="btn ghost" id="authBtn">Log in</button></div></div></header>
+
+<main id="landing" class="wrap">
+  <div class="hero">
+    <div>
+      <h1>Reply to customers and post online in seconds, not hours.</h1>
+      <p>Your personal AI marketing assistant. Create professional business content without hiring a marketing agency.</p>
+      <div class="row"><button class="btn" data-open="signup">Start free</button><a class="btn ghost" href="#pricing" style="text-decoration:none">See pricing</a></div>
+    </div>
+    <div class="chat" aria-label="Example reply">
+      <div class="msg in">Hi, do you have space for a haircut tomorrow afternoon? How much for a fade?</div>
+      <div class="msg out">Hi! Yes, we have a slot tomorrow at [time]. A fade is [price]. Want me to book it for you?</div>
+      <div class="cap">Example of a friendly WhatsApp reply. Copy it, fill in your details, send.</div>
+    </div>
+  </div>
+  <section><h2>Everything a one-person business needs</h2><div class="grid">
+    <div class="card"><h3>Social posts</h3><p>Instagram, Facebook and TikTok captions with hashtags, in your tone.</p></div>
+    <div class="card"><h3>Customer replies</h3><p>Answer questions, complaints and bookings. Copy straight into WhatsApp.</p></div>
+    <div class="card"><h3>Ads and bios</h3><p>Advertising copy, business bios and profiles that sound professional.</p></div>
+    <div class="card"><h3>Campaigns and calendar</h3><p>Offers, ideas and a 7 or 30 day posting plan. Save everything to your library.</p></div>
+  </div></section>
+  <section id="pricing"><h2>Simple pricing</h2><div class="grid">
+    <div class="card"><h3>Free</h3><div class="price">$0</div><p>10 generations a month, all basic tools, 20 saved items.</p></div>
+    <div class="card feat"><h3>Pro</h3><div class="price">$5<span class="cap">/month</span></div><p>200 generations, content calendar, unlimited saved content.</p></div>
+    <div class="card"><h3>Business</h3><div class="price">$9<span class="cap">/month</span></div><p>500 generations and everything in Pro.</p></div>
+  </div><p class="cap">To upgrade, log in and message us. We activate paid plans by hand for now.</p></section>
+  <section><h2>Questions</h2>
+    <details><summary>Does it connect to WhatsApp?</summary><p>No. You copy the reply and paste it into WhatsApp yourself.</p></details>
+    <details><summary>Is the writing always right?</summary><p>It is a draft. Check names, prices and facts before you post or send.</p></details>
+    <details><summary>Where does my text go?</summary><p>Your prompts are sent to Google Gemini to generate the result. Do not enter private customer details.</p></details>
+  </section>
+</main>
+
+<main id="app" class="wrap hide">
+  <div class="tabs" id="tabs" role="group" aria-label="Tools"></div>
+  <div class="app">
+    <div class="card"><div id="usage" class="cap"></div><div class="meter"><b id="bar" style="width:0"></b></div>
+      <form id="form" novalidate></form></div>
+    <div class="card"><h3 id="outTitle">Result</h3>
+      <div id="out"><div class="empty">Your generated content will appear here.</div></div></div>
+  </div>
+</main>
+
+<dialog id="dlg"><h3 id="dTitle">Log in</h3><form id="af">
+  <label for="em">Email</label><input id="em" type="email" autocomplete="email" required>
+  <label for="pw">Password</label><input id="pw" type="password" minlength="8" autocomplete="current-password" required>
+  <div class="err" id="ae" role="alert"></div>
+  <div class="row"><button class="btn" id="aGo">Log in</button><button type="button" class="btn ghost" id="aSwap">Create account</button></div>
+  <p class="row"><button type="button" class="cap" id="aForgot" style="background:none;border:0;padding:0;cursor:pointer;text-decoration:underline">Forgot password?</button></p>
+</form></dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.0/dist/umd/supabase.min.js"></script>
+<script>
+// Paste your own values from Supabase > Project Settings > API. The anon key is safe to be public.
+const SUPABASE_URL = 'YOUR_SUPABASE_URL', SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const $ = id => document.getElementById(id);
+const SEL = (id, label, opts) => ({ id, label, opts });
+const TXT = (id, label, big) => ({ id, label, big });
+const TOOLS = {
+  social: { name: 'Social posts', f: [SEL('platform', 'Platform', ['Instagram', 'Facebook', 'TikTok']), TXT('topic', 'What is the post about?', 1), SEL('tone', 'Tone', ['Friendly', 'Professional', 'Playful', 'Luxury']), SEL('length', 'Length', ['short', 'medium', 'long'])] },
+  reply: { name: 'Customer replies', f: [TXT('message', 'Paste the customer message', 1), SEL('style', 'Reply style', ['friendly', 'professional', 'sales-focused', 'complaint response', 'customer service', 'follow-up', 'booking confirmation'])] },
+  ad: { name: 'Ads', f: [TXT('name', 'Product or service'), TXT('description', 'Description', 1), TXT('price', 'Price (optional)'), TXT('audience', 'Target audience'), TXT('promo', 'Promotion details')] },
+  bio: { name: 'Bios', f: [TXT('business', 'Describe your business', 1)] },
+  campaign: { name: 'Campaigns', f: [TXT('business', 'Describe your business', 1), TXT('goal', 'Goal, for example more bookings')] },
+  calendar: { name: 'Content calendar (Pro)', f: [TXT('business', 'Describe your business', 1), SEL('days', 'Plan length', ['7', '30'])] },
+  library: { name: 'Saved' },
+};
+let tool = 'social', session = null, lastText = '';
+
+function el(tag, props = {}, ...kids) { const e = Object.assign(document.createElement(tag), props); e.append(...kids); return e; }
+function note(msg, cls = 'err') { const d = el('div', { className: cls, role: 'alert' }, msg); $('out').replaceChildren(d); }
+
+// ---- Auth ----
+let mode = 'login';
+function setMode(m) {
+  mode = m; $('dTitle').textContent = m === 'login' ? 'Log in' : 'Create your account';
+  $('aGo').textContent = m === 'login' ? 'Log in' : 'Sign up'; $('aSwap').textContent = m === 'login' ? 'Create account' : 'I have an account';
+  $('pw').autocomplete = m === 'login' ? 'current-password' : 'new-password'; $('ae').textContent = '';
+}
+function openAuth(m) { setMode(m); $('dlg').showModal(); }
+$('authBtn').onclick = () => session ? sb.auth.signOut() : openAuth('login');
+document.querySelectorAll('[data-open]').forEach(b => b.onclick = () => openAuth(b.dataset.open));
+$('aSwap').onclick = () => setMode(mode === 'login' ? 'signup' : 'login');
+$('aForgot').onclick = async () => {
+  const email = $('em').value.trim(); if (!email) { $('ae').textContent = 'Enter your email first.'; return; }
+  const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: location.origin });
+  $('ae').textContent = error ? error.message : 'Check your email for a reset link.';
+};
+$('af').onsubmit = async e => {
+  e.preventDefault(); const email = $('em').value.trim(), password = $('pw').value;
+  $('aGo').disabled = true; $('ae').textContent = '';
+  const { data, error } = mode === 'login' ? await sb.auth.signInWithPassword({ email, password }) : await sb.auth.signUp({ email, password });
+  $('aGo').disabled = false;
+  if (error) { $('ae').textContent = error.message; return; }
+  if (mode === 'signup' && !data.session) { $('ae').textContent = 'Check your email to confirm your account, then log in.'; return; }
+  $('dlg').close();
+};
+sb.auth.onAuthStateChange((ev, s) => {
+  session = s; const on = !!s;
+  $('landing').classList.toggle('hide', on); $('app').classList.toggle('hide', !on);
+  $('authBtn').textContent = on ? 'Log out' : 'Log in'; $('who').classList.toggle('hide', !on); $('who').textContent = s?.user.email || '';
+  if (ev === 'PASSWORD_RECOVERY') { const p = prompt('Choose a new password (8+ characters)'); if (p) sb.auth.updateUser({ password: p }).then(r => alert(r.error ? r.error.message : 'Password updated.')); }
+  if (on) { renderTabs(); select(tool); refreshUsage(); }
+});
+
+// ---- Tools ----
+function renderTabs() {
+  $('tabs').replaceChildren(...Object.entries(TOOLS).map(([k, t]) => el('button', { className: 'tab', type: 'button', textContent: t.name, onclick: () => select(k) })));
+}
+function select(k) {
+  tool = k; [...$('tabs').children].forEach((b, i) => b.setAttribute('aria-pressed', Object.keys(TOOLS)[i] === k));
+  const form = $('form'); form.replaceChildren();
+  if (k === 'library') { form.append(el('p', { className: 'cap' }, 'Everything you save appears on the right.')); return loadLibrary(); }
+  TOOLS[k].f.forEach(f => {
+    const input = f.opts ? el('select', { id: 'f_' + f.id }, ...f.opts.map(o => el('option', { value: o, textContent: o }))) : el(f.big ? 'textarea' : 'input', { id: 'f_' + f.id, maxLength: 600 });
+    form.append(el('label', { htmlFor: 'f_' + f.id, textContent: f.label }), input);
+  });
+  form.append(el('div', { className: 'row' }, el('button', { className: 'btn', id: 'gen', textContent: 'Generate' })));
+  $('out').replaceChildren(el('div', { className: 'empty' }, 'Your generated content will appear here.'));
+}
+async function refreshUsage() {
+  const start = new Date(); start.setUTCDate(1); start.setUTCHours(0, 0, 0, 0);
+  const [{ data: p }, { count }] = await Promise.all([
+    sb.from('profiles').select('plan').single(),
+    sb.from('generations').select('id', { count: 'exact', head: true }).gte('created_at', start.toISOString()),
+  ]);
+  const limit = { free: 10, pro: 200, business: 500 }[p?.plan] || 10;
+  $('usage').textContent = `${(p?.plan || 'free')} plan: ${count || 0} of ${limit} generations used this month`;
+  $('bar').style.width = Math.min(100, ((count || 0) / limit) * 100) + '%';
+}
+$('form').onsubmit = async e => {
+  e.preventDefault(); if (tool === 'library') return;
+  const fields = {}; TOOLS[tool].f.forEach(f => fields[f.id] = $('f_' + f.id).value);
+  const btn = $('gen'); btn.disabled = true; btn.replaceChildren(el('span', { className: 'spin' }), ' Writing...');
+  try {
+    const r = await fetch('/api/generate', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + session.access_token }, body: JSON.stringify({ tool, fields }) });
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || 'Something went wrong. Try again.');
+    showResult(d.text); refreshUsage();
+  } catch (err) { note(err.message); }
+  btn.disabled = false; btn.textContent = 'Generate';
+};
+function showResult(text) {
+  lastText = text;
+  const ta = el('textarea', { value: text, style: 'min-height:260px', ariaLabel: 'Generated content' });
+  const cat = el('input', { placeholder: 'Category (optional)', maxLength: 39, style: 'max-width:200px' });
+  ta.oninput = () => lastText = ta.value;
+  $('out').replaceChildren(ta, el('div', { className: 'row' },
+    el('button', { className: 'btn', type: 'button', textContent: 'Copy', onclick: async e => { await navigator.clipboard.writeText(ta.value); e.target.textContent = 'Copied'; } }),
+    el('button', { className: 'btn ghost', type: 'button', textContent: 'Regenerate', onclick: () => $('form').requestSubmit() }),
+    cat, el('button', { className: 'btn ghost', type: 'button', textContent: 'Save', onclick: async e => {
+      const { error } = await sb.from('saved_content').insert({ tool, category: cat.value.trim() || 'General', body: ta.value });
+      e.target.textContent = error ? 'Could not save' : 'Saved'; if (error) alert(error.message);
+    } })));
+}
+
+// ---- Library ----
+async function loadLibrary() {
+  $('out').replaceChildren(el('div', { className: 'empty' }, 'Loading...'));
+  const { data, error } = await sb.from('saved_content').select('*').order('created_at', { ascending: false });
+  if (error) return note('Could not load your library. Try again.');
+  if (!data.length) return $('out').replaceChildren(el('div', { className: 'empty' }, 'Nothing saved yet. Generate something and press Save.'));
+  $('out').replaceChildren(...data.map(row => {
+    const ta = el('textarea', { value: row.body });
+    return el('div', { className: 'card', style: 'margin-bottom:12px' }, el('div', { className: 'cap' }, `${TOOLS[row.tool]?.name || row.tool} · ${row.category}`), ta,
+      el('div', { className: 'row' },
+        el('button', { className: 'btn ghost', textContent: 'Save changes', onclick: async () => { const { error } = await sb.from('saved_content').update({ body: ta.value }).eq('id', row.id); if (error) alert(error.message); } }),
+        el('button', { className: 'btn ghost', textContent: 'Delete', onclick: async () => { if (confirm('Delete this item?')) { await sb.from('saved_content').delete().eq('id', row.id); loadLibrary(); } } })));
+  }));
+}
+</script>
+</body>
+</html>
